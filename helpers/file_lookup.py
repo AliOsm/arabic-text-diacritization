@@ -3,14 +3,24 @@ import sys
 from os import listdir
 from os.path import isfile, join
 
-if len(sys.argv) != 3:
-	sys.exit('usage: python %s [FOLDER_PATH] [LINE_TO_SEARCH]' % sys.argv[0])
+def file_lookup(FOLDER_PATH, LINE_TO_SEARCH):
+  files = [file for file in listdir(FOLDER_PATH) if isfile(join(FOLDER_PATH, file))]
 
-folder_path = sys.argv[1]
-line = sys.argv[2]
+  found_files = []
+  for file in files:
+    if LINE_TO_SEARCH in open(join(FOLDER_PATH, file)).read():
+      found_files.append(file)
 
-files = [f for f in listdir(folder_path) if isfile(join(folder_path, f))]
+  return found_files
 
-for file in files:
-	if line in open(folder_path + file).read():
-		print('Found in:', file)
+if __name__ == '__main__':
+  if len(sys.argv) != 3:
+  	sys.exit('usage: python %s [FOLDER_PATH] [LINE_TO_SEARCH]' % sys.argv[0])
+
+  FOLDER_PATH = sys.argv[1]
+  LINE_TO_SEARCH = sys.argv[2]
+
+  found_files = file_lookup(FOLDER_PATH, LINE_TO_SEARCH)
+
+  for file in found_files:
+    print('Found in:', file)

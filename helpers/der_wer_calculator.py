@@ -1,16 +1,19 @@
 import sys
 import pickle as pkl
 
-# Constants
-CONSTANTS_PATH = 'constants'
+def load_constants():
+  # Constants
+  CONSTANTS_PATH = 'constants'
 
-with open(CONSTANTS_PATH + '/ARABIC_LETTERS_LIST.pickle', 'rb') as file:
-  ARABIC_LETTERS_LIST = pkl.load(file)
+  with open(CONSTANTS_PATH + '/ARABIC_LETTERS_LIST.pickle', 'rb') as file:
+    ARABIC_LETTERS_LIST = pkl.load(file)
 
-with open(CONSTANTS_PATH + '/CLASSES_LIST.pickle', 'rb') as file:
-  CLASSES_LIST = pkl.load(file)
+  with open(CONSTANTS_PATH + '/CLASSES_LIST.pickle', 'rb') as file:
+    CLASSES_LIST = pkl.load(file)
 
-def get_diacritic_class(idx, line, case_ending):
+  return ARABIC_LETTERS_LIST, CLASSES_LIST
+
+def get_diacritic_class(idx, line, case_ending, ARABIC_LETTERS_LIST, CLASSES_LIST):
   idxs = [idx + 1, idx + 2, idx + 3]
 
   # Handle without case ending
@@ -58,14 +61,16 @@ def get_diacritic_class(idx, line, case_ending):
       # Otherwise consider only the first diacritic
       return CLASSES_LIST.index(diac[0]) + 1
 
-def get_diacritics_classes(line, case_ending):
+def get_diacritics_classes(line, case_ending, ARABIC_LETTERS_LIST, CLASSES_LIST):
   classes = list()
   for idx, char in enumerate(line):
     if char in ARABIC_LETTERS_LIST:
-      classes.append(get_diacritic_class(idx, line, case_ending))
+      classes.append(get_diacritic_class(idx, line, case_ending, ARABIC_LETTERS_LIST, CLASSES_LIST))
   return classes
 
 def calculate_der(original_file, output_file, case_ending=True, no_diacritic=True):
+  ARABIC_LETTERS_LIST, CLASSES_LIST = load_constants()
+
   with open(original_file, 'r') as file:
     original_content = file.readlines()
   
@@ -77,8 +82,8 @@ def calculate_der(original_file, output_file, case_ending=True, no_diacritic=Tru
   equal = 0
   not_equal = 0
   for (original_line, output_line) in zip(original_content, output_content):
-    original_classes = get_diacritics_classes(original_line, case_ending)
-    output_classes = get_diacritics_classes(output_line, case_ending)
+    original_classes = get_diacritics_classes(original_line, case_ending, ARABIC_LETTERS_LIST, CLASSES_LIST)
+    output_classes = get_diacritics_classes(output_line, case_ending, ARABIC_LETTERS_LIST, CLASSES_LIST)
 
     assert(len(original_classes) == len(output_classes))
 
@@ -98,6 +103,8 @@ def calculate_der(original_file, output_file, case_ending=True, no_diacritic=Tru
   return round(not_equal / (equal + not_equal) * 100, 2)
 
 def calculate_wer(original_file, output_file, case_ending=True, no_diacritic=True):
+  ARABIC_LETTERS_LIST, CLASSES_LIST = load_constants()
+
   with open(original_file, 'r') as file:
     original_content = file.readlines()
   
@@ -115,8 +122,8 @@ def calculate_wer(original_file, output_file, case_ending=True, no_diacritic=Tru
     assert(len(original_line) == len(output_line))
 
     for (original_word, output_word) in zip(original_line, output_line):
-      original_classes = get_diacritics_classes(original_word, case_ending)
-      output_classes = get_diacritics_classes(output_word, case_ending)
+      original_classes = get_diacritics_classes(original_word, case_ending, ARABIC_LETTERS_LIST, CLASSES_LIST)
+      output_classes = get_diacritics_classes(output_word, case_ending, ARABIC_LETTERS_LIST, CLASSES_LIST)
 
       assert(len(original_classes) == len(output_classes))
 

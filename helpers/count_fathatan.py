@@ -1,30 +1,35 @@
-import io
 import sys
 
 from os import listdir
 from os.path import isfile, join
 
-if len(sys.argv) != 2:
-	sys.exit('usage: python %s [FOLDER_PATH]' % sys.argv[0])
+def count_fathatan(FOLDER_PATH):
+  files = [file for file in listdir(FOLDER_PATH) if isfile(join(FOLDER_PATH, file))]
 
-folder_path = sys.argv[1]
+  before = 0
+  after = 0
+  for file in files:
+    with open(join(FOLDER_PATH, file), 'r') as f:
+      lines = f.readlines() 
 
-files = [f for f in listdir(folder_path) if isfile(join(folder_path, f))]
+      pre = ''
+      for line in lines:
+        for ch in line:
+          if ch == 'ا' and pre == 'ً':
+            before += 1
+          elif ch == 'ً' and pre == 'ا':
+            after += 1
+          pre = ch
 
-before_a = 0
-after_a = 0
-for file in files:
-	with io.open(folder_path + file, 'r', encoding='utf-8') as my_file:
-		lines = my_file.readlines() 
+  return before, after
 
-		pre = '0'
-		for line in lines:
-			for ch in line:
-				if ch == 'ا' and pre == 'ً':
-					before_a += 1
-				elif ch == 'ً' and pre == 'ا':
-					after_a += 1
-				pre = ch
+if __name__ == '__main__':
+  if len(sys.argv) != 2:
+  	sys.exit('usage: python %s [FOLDER_PATH]' % sys.argv[0])
 
-print('Before Alif:', before_a)
-print('After Alif:', after_a)
+  FOLDER_PATH = sys.argv[1]
+
+  before, after = count_fathatan(FOLDER_PATH)
+  
+  print('Before Alif:', before)
+  print('After Alif:', after)
