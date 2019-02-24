@@ -2,7 +2,7 @@ import sys
 import pickle as pkl
 
 # Constants
-CONSTANTS_PATH = 'Constants'
+CONSTANTS_PATH = 'constants'
 
 with open(CONSTANTS_PATH + '/ARABIC_LETTERS_LIST.pickle', 'rb') as file:
   ARABIC_LETTERS_LIST = pkl.load(file)
