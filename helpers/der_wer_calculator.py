@@ -2,7 +2,6 @@ import sys
 import pickle as pkl
 
 def load_constants():
-  # Constants
   CONSTANTS_PATH = 'constants'
 
   with open(CONSTANTS_PATH + '/ARABIC_LETTERS_LIST.pickle', 'rb') as file:
@@ -18,25 +17,20 @@ def get_diacritic_class(idx, line, case_ending, ARABIC_LETTERS_LIST, CLASSES_LIS
 
   # Handle without case ending
   if not case_ending:
-    if idxs[0] == len(line):
-      return -1
-    if idxs[0] < len(line) and (line[idxs[0]] not in ARABIC_LETTERS_LIST and \
-                                line[idxs[0]] not in CLASSES_LIST):
-      return -1
-    
-    if idxs[0] < len(line) and line[idxs[0]] in CLASSES_LIST:
-      if idxs[1] == len(line):
-        return -1
-      if idxs[1] < len(line) and (line[idxs[1]] not in ARABIC_LETTERS_LIST and \
-                                  line[idxs[1]] not in CLASSES_LIST):
-        return -1
+    end = True
 
-      if idxs[1] < len(line) and line[idxs[1]] in CLASSES_LIST:
-        if idxs[2] == len(line):
-          return -1
-        if idxs[2] < len(line) and (line[idxs[2]] not in ARABIC_LETTERS_LIST and \
-                                    line[idxs[2]] not in CLASSES_LIST):
-          return -1
+    if idxs[0] < len(line) and line[idxs[0]] in ARABIC_LETTERS_LIST:
+      end = False
+    elif idxs[0] < len(line) and idxs[1] < len(line) and \
+         line[idxs[0]] in CLASSES_LIST and line[idxs[1]] in ARABIC_LETTERS_LIST:
+      end = False
+    elif idxs[0] < len(line) and idxs[1] < len(line) and idxs[2] < len(line) and \
+         line[idxs[0]] in CLASSES_LIST and line[idxs[1]] in CLASSES_LIST and \
+         line[idxs[2]] in ARABIC_LETTERS_LIST:
+      end = False
+
+    if end:
+      return -1
 
   if idxs[0] >= len(line) or line[idxs[0]] not in CLASSES_LIST:
     # No diacritic
@@ -81,6 +75,7 @@ def calculate_der(original_file, output_file, case_ending=True, no_diacritic=Tru
 
   equal = 0
   not_equal = 0
+  cnt = 0
   for (original_line, output_line) in zip(original_content, output_content):
     original_classes = get_diacritics_classes(original_line, case_ending, ARABIC_LETTERS_LIST, CLASSES_LIST)
     output_classes = get_diacritics_classes(output_line, case_ending, ARABIC_LETTERS_LIST, CLASSES_LIST)
