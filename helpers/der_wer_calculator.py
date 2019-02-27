@@ -35,13 +35,13 @@ def get_diacritic_class(idx, line, case_ending, ARABIC_LETTERS_LIST, CLASSES_LIS
   if idxs[0] >= len(line) or line[idxs[0]] not in CLASSES_LIST:
     # No diacritic
     return 0
-  
+
   diac = line[idx + 1]
 
   if idxs[1] >= len(line) or line[idxs[1]] not in CLASSES_LIST:
     # Only one diacritic
     return CLASSES_LIST.index(diac) + 1
-  
+
   diac += line[idxs[1]]
 
   try:
@@ -67,7 +67,7 @@ def calculate_der(original_file, output_file, case_ending=True, no_diacritic=Tru
 
   with open(original_file, 'r') as file:
     original_content = file.readlines()
-  
+
   with open(output_file, 'r') as file:
     output_content = file.readlines()
 
@@ -75,7 +75,6 @@ def calculate_der(original_file, output_file, case_ending=True, no_diacritic=Tru
 
   equal = 0
   not_equal = 0
-  cnt = 0
   for (original_line, output_line) in zip(original_content, output_content):
     original_classes = get_diacritics_classes(original_line, case_ending, ARABIC_LETTERS_LIST, CLASSES_LIST)
     output_classes = get_diacritics_classes(output_line, case_ending, ARABIC_LETTERS_LIST, CLASSES_LIST)
@@ -91,7 +90,7 @@ def calculate_der(original_file, output_file, case_ending=True, no_diacritic=Tru
         print('WOW!')
       if original_class == -1 and output_class == -1:
         continue
-      
+
       equal += (original_class == output_class)
       not_equal += (original_class != output_class)
 
@@ -102,10 +101,10 @@ def calculate_wer(original_file, output_file, case_ending=True, no_diacritic=Tru
 
   with open(original_file, 'r') as file:
     original_content = file.readlines()
-  
+
   with open(output_file, 'r') as file:
     output_content = file.readlines()
-  
+
   assert(len(original_content) == len(output_content))
 
   equal = 0
