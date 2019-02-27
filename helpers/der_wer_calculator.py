@@ -13,43 +13,35 @@ def load_constants():
   return ARABIC_LETTERS_LIST, CLASSES_LIST
 
 def get_diacritic_class(idx, line, case_ending, ARABIC_LETTERS_LIST, CLASSES_LIST):
-  idxs = [idx + 1, idx + 2, idx + 3]
 
   # Handle without case ending
   if not case_ending:
     end = True
-
-    if idxs[0] < len(line) and line[idxs[0]] in ARABIC_LETTERS_LIST:
-      end = False
-    elif idxs[0] < len(line) and idxs[1] < len(line) and \
-         line[idxs[0]] in CLASSES_LIST and line[idxs[1]] in ARABIC_LETTERS_LIST:
-      end = False
-    elif idxs[0] < len(line) and idxs[1] < len(line) and idxs[2] < len(line) and \
-         line[idxs[0]] in CLASSES_LIST and line[idxs[1]] in CLASSES_LIST and \
-         line[idxs[2]] in ARABIC_LETTERS_LIST:
-      end = False
-
+    for i in range(idx + 1, len(line)):
+      if line[i] not in CLASSES_LIST:
+        end = line[i] not in ARABIC_LETTERS_LIST
+        break
     if end:
       return -1
 
-  if idxs[0] >= len(line) or line[idxs[0]] not in CLASSES_LIST:
+  if idx + 1 >= len(line) or line[idx + 1] not in CLASSES_LIST:
     # No diacritic
     return 0
 
   diac = line[idx + 1]
 
-  if idxs[1] >= len(line) or line[idxs[1]] not in CLASSES_LIST:
+  if idx + 2 >= len(line) or line[idx + 2] not in CLASSES_LIST:
     # Only one diacritic
     return CLASSES_LIST.index(diac) + 1
 
-  diac += line[idxs[1]]
+  diac += line[idx + 2]
 
   try:
     # Try the possibility of double diacritics
     return CLASSES_LIST.index(diac) + 1
   except:
     try:
-      # Try the possibility of reversed diacritics
+      # Try the possibility of reversed double diacritics
       return CLASSES_LIST.index(diac[::-1]) + 1
     except:
       # Otherwise consider only the first diacritic
