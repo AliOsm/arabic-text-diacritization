@@ -1,8 +1,8 @@
 import pickle as pkl
 
 # Constants
-CONSTANTS_PATH = '../../Helpers/Constants'
-DATASET_PATH = '../../Dataset'
+CONSTANTS_PATH = '../../helpers/constants'
+DATASET_PATH = '../../dataset'
 
 with open(CONSTANTS_PATH + '/DIACRITICS_LIST.pickle', 'rb') as file:
   DIACRITICS_LIST = pkl.load(file)
@@ -31,5 +31,5 @@ for line in test_data:
   if tmp != '':
     new_test_data.append(tmp)
 
-with open('splitted_test_data.txt', 'w') as file:
+with open('split_test.txt', 'w') as file:
   file.write('\n'.join(new_test_data))
