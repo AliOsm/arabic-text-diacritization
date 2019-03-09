@@ -1,127 +1,121 @@
+# -*- coding: utf-8 -*-
+
 import sys
+import argparse
 import pickle as pkl
 
-def load_constants():
-  CONSTANTS_PATH = 'constants'
+CONSTANTS_PATH = 'constants'
 
-  with open(CONSTANTS_PATH + '/ARABIC_LETTERS_LIST.pickle', 'rb') as file:
-    ARABIC_LETTERS_LIST = pkl.load(file)
-
-  with open(CONSTANTS_PATH + '/CLASSES_LIST.pickle', 'rb') as file:
-    CLASSES_LIST = pkl.load(file)
-
-  return ARABIC_LETTERS_LIST, CLASSES_LIST
-
-def get_diacritic_class(idx, line, case_ending, ARABIC_LETTERS_LIST, CLASSES_LIST):
-
+def get_diacritic_class(idx, line, case_ending, arabic_letters, diacritic_classes):
   # Handle without case ending
   if not case_ending:
     end = True
     for i in range(idx + 1, len(line)):
-      if line[i] not in CLASSES_LIST:
-        end = line[i] not in ARABIC_LETTERS_LIST
+      if line[i] not in diacritic_classes:
+        end = line[i] not in arabic_letters
         break
     if end:
       return -1
 
-  if idx + 1 >= len(line) or line[idx + 1] not in CLASSES_LIST:
+  if idx + 1 >= len(line) or line[idx + 1] not in diacritic_classes:
     # No diacritic
     return 0
 
   diac = line[idx + 1]
 
-  if idx + 2 >= len(line) or line[idx + 2] not in CLASSES_LIST:
+  if idx + 2 >= len(line) or line[idx + 2] not in diacritic_classes:
     # Only one diacritic
-    return CLASSES_LIST.index(diac) + 1
+    return diacritic_classes.index(diac) + 1
 
   diac += line[idx + 2]
 
   try:
     # Try the possibility of double diacritics
-    return CLASSES_LIST.index(diac) + 1
+    return diacritic_classes.index(diac) + 1
   except:
     try:
       # Try the possibility of reversed double diacritics
-      return CLASSES_LIST.index(diac[::-1]) + 1
+      return diacritic_classes.index(diac[::-1]) + 1
     except:
       # Otherwise consider only the first diacritic
-      return CLASSES_LIST.index(diac[0]) + 1
+      return diacritic_classes.index(diac[0]) + 1
 
-def get_diacritics_classes(line, case_ending, ARABIC_LETTERS_LIST, CLASSES_LIST):
+def get_diacritics_classes(line, case_ending, arabic_letters, diacritic_classes, style):
   classes = list()
   for idx, char in enumerate(line):
-    if char in ARABIC_LETTERS_LIST:
-      classes.append(get_diacritic_class(idx, line, case_ending, ARABIC_LETTERS_LIST, CLASSES_LIST))
+    if style == 'Ali':
+      if char in arabic_letters:
+        classes.append(get_diacritic_class(idx, line, case_ending, arabic_letters, diacritic_classes))
+    elif style == 'Zitouni':
+      if char in diacritic_classes or char.isspace():
+        continue
+      classes.append(get_diacritic_class(idx, line, case_ending, arabic_letters, diacritic_classes))
   return classes
 
-def calculate_der(original_file, output_file, case_ending=True, no_diacritic=True):
-  ARABIC_LETTERS_LIST, CLASSES_LIST = load_constants()
-
+def calculate_der(original_file, target_file, arabic_letters, diacritic_classes, style, case_ending=True, no_diacritic=True):
   with open(original_file, 'r') as file:
     original_content = file.readlines()
 
-  with open(output_file, 'r') as file:
-    output_content = file.readlines()
+  with open(target_file, 'r') as file:
+    target_content = file.readlines()
 
-  assert(len(original_content) == len(output_content))
+  assert(len(original_content) == len(target_content))
 
   equal = 0
   not_equal = 0
-  for (original_line, output_line) in zip(original_content, output_content):
-    original_classes = get_diacritics_classes(original_line, case_ending, ARABIC_LETTERS_LIST, CLASSES_LIST)
-    output_classes = get_diacritics_classes(output_line, case_ending, ARABIC_LETTERS_LIST, CLASSES_LIST)
+  for (original_line, target_line) in zip(original_content, target_content):
+    original_classes = get_diacritics_classes(original_line, case_ending, arabic_letters, diacritic_classes, style)
+    target_classes = get_diacritics_classes(target_line, case_ending, arabic_letters, diacritic_classes, style)
 
-    assert(len(original_classes) == len(output_classes))
+    assert(len(original_classes) == len(target_classes))
 
-    for (original_class, output_class) in zip(original_classes, output_classes):
+    for (original_class, target_class) in zip(original_classes, target_classes):
       if not no_diacritic and original_class == 0:
         continue
-      if original_class == -1 and output_class != -1:
+      if original_class == -1 and target_class != -1:
         print('WOW!')
-      if original_class != -1 and output_class == -1:
+      if original_class != -1 and target_class == -1:
         print('WOW!')
-      if original_class == -1 and output_class == -1:
+      if original_class == -1 and target_class == -1:
         continue
 
-      equal += (original_class == output_class)
-      not_equal += (original_class != output_class)
+      equal += (original_class == target_class)
+      not_equal += (original_class != target_class)
 
   return round(not_equal / (equal + not_equal) * 100, 2)
 
-def calculate_wer(original_file, output_file, case_ending=True, no_diacritic=True):
-  ARABIC_LETTERS_LIST, CLASSES_LIST = load_constants()
-
+def calculate_wer(original_file, target_file, arabic_letters, diacritic_classes, style, case_ending=True, no_diacritic=True):
   with open(original_file, 'r') as file:
     original_content = file.readlines()
 
-  with open(output_file, 'r') as file:
-    output_content = file.readlines()
+  with open(target_file, 'r') as file:
+    target_content = file.readlines()
 
-  assert(len(original_content) == len(output_content))
+  assert(len(original_content) == len(target_content))
 
   equal = 0
   not_equal = 0
-  for (original_line, output_line) in zip(original_content, output_content):
+  for (original_line, target_line) in zip(original_content, target_content):
     original_line = original_line.split()
-    output_line = output_line.split()
+    target_line = target_line.split()
 
-    assert(len(original_line) == len(output_line))
+    assert(len(original_line) == len(target_line))
 
-    for (original_word, output_word) in zip(original_line, output_line):
-      original_classes = get_diacritics_classes(original_word, case_ending, ARABIC_LETTERS_LIST, CLASSES_LIST)
-      output_classes = get_diacritics_classes(output_word, case_ending, ARABIC_LETTERS_LIST, CLASSES_LIST)
+    for (original_word, target_word) in zip(original_line, target_line):
+      original_classes = get_diacritics_classes(original_word, case_ending, arabic_letters, diacritic_classes, style)
+      target_classes = get_diacritics_classes(target_word, case_ending, arabic_letters, diacritic_classes, style)
 
-      assert(len(original_classes) == len(output_classes))
+      assert(len(original_classes) == len(target_classes))
 
       if len(original_classes) == 0:
         continue
 
       equal_classes = 0
-      for (original_class, output_class) in zip(original_classes, output_classes):
+      for (original_class, target_class) in zip(original_classes, target_classes):
         if not no_diacritic and original_class == 0:
           equal_classes += 1
           continue
-        equal_classes += (original_class == output_class)
+        equal_classes += (original_class == target_class)
 
       equal += (equal_classes == len(original_classes))
       not_equal += (equal_classes != len(original_classes))
@@ -129,18 +123,38 @@ def calculate_wer(original_file, output_file, case_ending=True, no_diacritic=Tru
   return round(not_equal / (equal + not_equal) * 100, 2)
 
 if __name__ == '__main__':
-  if len(sys.argv) != 3:
-    sys.exit('usage: python %s [ORIGINAL_TEXT_FILE] [PREDICTED_TEXT_FILE]' % sys.argv[0])
+  parser = argparse.ArgumentParser(description='Calculate DER and WER')
+  parser.add_argument('-ofp', '--original-file-path', help='File path to original text', required=True)
+  parser.add_argument('-tfp', '--target-file-path', help='File path to target text', required=True)
+  parser.add_argument('-s', '--style', help='How to calculate DER and WER', required=False, default='Ali', choices=['Zitouni', 'Ali'])
+  args = parser.parse_args()
 
-  ORIGINAL_TEXT_FILE = sys.argv[1]
-  PREDICTED_TEXT_FILE = sys.argv[2]
+  with open(CONSTANTS_PATH + '/ARABIC_LETTERS_LIST.pickle', 'rb') as file:
+    ARABIC_LETTERS_LIST = pkl.load(file)
 
-  print('DER with case ending (no diacritics included):', calculate_der(ORIGINAL_TEXT_FILE, PREDICTED_TEXT_FILE))
-  print('DER without case ending (no diacritics included):', calculate_der(ORIGINAL_TEXT_FILE, PREDICTED_TEXT_FILE, case_ending=False))
-  print('WER with case ending (no diacritics included):', calculate_wer(ORIGINAL_TEXT_FILE, PREDICTED_TEXT_FILE))
-  print('WER without case ending (no diacritics included):', calculate_wer(ORIGINAL_TEXT_FILE, PREDICTED_TEXT_FILE, case_ending=False))
+  with open(CONSTANTS_PATH + '/CLASSES_LIST.pickle', 'rb') as file:
+    CLASSES_LIST = pkl.load(file)
+
+  print('+---------------------------------------------------------------------------------------------+')
+  print('|       |  With case ending  | Without case ending |  With case ending  | Without case ending |')
+  print('|  DER  |------------------------------------------+------------------------------------------|')
+  print('|       |          Including no diacritic          |          Excluding no diacritic          |')
+  print('|-------+------------------------------------------+------------------------------------------|')
+  print('|   %%   |        %.2f       |        %.2f        |        %.2f       |        %.2f        |' %
+        (calculate_der(args.original_file_path, args.target_file_path, ARABIC_LETTERS_LIST, CLASSES_LIST, args.style),
+        calculate_der(args.original_file_path, args.target_file_path, ARABIC_LETTERS_LIST, CLASSES_LIST, args.style, case_ending=False),
+        calculate_der(args.original_file_path, args.target_file_path, ARABIC_LETTERS_LIST, CLASSES_LIST, args.style, no_diacritic=False),
+        calculate_der(args.original_file_path, args.target_file_path, ARABIC_LETTERS_LIST, CLASSES_LIST, args.style, case_ending=False, no_diacritic=False)))
+  print('+---------------------------------------------------------------------------------------------+')
   print('')
-  print('DER with case ending (no diacritics not included):', calculate_der(ORIGINAL_TEXT_FILE, PREDICTED_TEXT_FILE, no_diacritic=False))
-  print('DER without case ending (no diacritics not included):', calculate_der(ORIGINAL_TEXT_FILE, PREDICTED_TEXT_FILE, case_ending=False, no_diacritic=False))
-  print('WER with case ending (no diacritics not included):', calculate_wer(ORIGINAL_TEXT_FILE, PREDICTED_TEXT_FILE, no_diacritic=False))
-  print('WER without case ending (no diacritics not included):', calculate_wer(ORIGINAL_TEXT_FILE, PREDICTED_TEXT_FILE, case_ending=False, no_diacritic=False))
+  print('+---------------------------------------------------------------------------------------------+')
+  print('|       |  With case ending  | Without case ending |  With case ending  | Without case ending |')
+  print('|  WER  |------------------------------------------+------------------------------------------|')
+  print('|       |          Including no diacritic          |          Excluding no diacritic          |')
+  print('|-------+------------------------------------------+------------------------------------------|')
+  print('|   %%   |        %.2f       |        %.2f        |        %.2f       |        %.2f        |' %
+        (calculate_wer(args.original_file_path, args.target_file_path, ARABIC_LETTERS_LIST, CLASSES_LIST, args.style),
+        calculate_wer(args.original_file_path, args.target_file_path, ARABIC_LETTERS_LIST, CLASSES_LIST, args.style, case_ending=False),
+        calculate_wer(args.original_file_path, args.target_file_path, ARABIC_LETTERS_LIST, CLASSES_LIST, args.style, no_diacritic=False),
+        calculate_wer(args.original_file_path, args.target_file_path, ARABIC_LETTERS_LIST, CLASSES_LIST, args.style, case_ending=False, no_diacritic=False)))
+  print('+---------------------------------------------------------------------------------------------+')

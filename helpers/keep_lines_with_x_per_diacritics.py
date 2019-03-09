@@ -29,14 +29,13 @@ def getDiacPerc(line):
 # Load constatns
 ARABIC_LETTERS_LIST, CLASSES_LIST = load_constants()
 
-FOLDER_PATH = '/home/kudo/Desktop/repositories/shakkelha/comparisons/shakkala/books'
+FOLDER_PATH = '/home/kudo/Desktop/repositories/shakkelha/comparisons/shakkala/auxiliary_dataset/dataset'
 
 files = [file for file in listdir(FOLDER_PATH) if isfile(join(FOLDER_PATH, file))]
 
 sum_cnt = 0
 
 for file in files:
-	if(file[-4:] != '.txt'): continue
 	print("\nFile being processed: " + file)
 	with open(join(FOLDER_PATH, file), 'r') as f_processed:
 		lines_processed = f_processed.readlines()
