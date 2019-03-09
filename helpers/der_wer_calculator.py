@@ -140,7 +140,7 @@ if __name__ == '__main__':
   print('|  DER  |------------------------------------------+------------------------------------------|')
   print('|       |          Including no diacritic          |          Excluding no diacritic          |')
   print('|-------+------------------------------------------+------------------------------------------|')
-  print('|   %%   |        %.2f       |        %.2f        |        %.2f       |        %.2f        |' %
+  print('|   %%   |        %5.2f       |        %5.2f        |        %5.2f       |        %5.2f        |' %
         (calculate_der(args.original_file_path, args.target_file_path, ARABIC_LETTERS_LIST, CLASSES_LIST, args.style),
         calculate_der(args.original_file_path, args.target_file_path, ARABIC_LETTERS_LIST, CLASSES_LIST, args.style, case_ending=False),
         calculate_der(args.original_file_path, args.target_file_path, ARABIC_LETTERS_LIST, CLASSES_LIST, args.style, no_diacritic=False),
@@ -152,7 +152,7 @@ if __name__ == '__main__':
   print('|  WER  |------------------------------------------+------------------------------------------|')
   print('|       |          Including no diacritic          |          Excluding no diacritic          |')
   print('|-------+------------------------------------------+------------------------------------------|')
-  print('|   %%   |        %.2f       |        %.2f        |        %.2f       |        %.2f        |' %
+  print('|   %%   |        %5.2f       |        %5.2f        |        %5.2f       |        %5.2f        |' %
         (calculate_wer(args.original_file_path, args.target_file_path, ARABIC_LETTERS_LIST, CLASSES_LIST, args.style),
         calculate_wer(args.original_file_path, args.target_file_path, ARABIC_LETTERS_LIST, CLASSES_LIST, args.style, case_ending=False),
         calculate_wer(args.original_file_path, args.target_file_path, ARABIC_LETTERS_LIST, CLASSES_LIST, args.style, no_diacritic=False),
