@@ -95,7 +95,7 @@ def calculate_wer(original_file, target_file, arabic_letters, diacritic_classes,
 
   equal = 0
   not_equal = 0
-  for (original_line, target_line) in zip(original_content, target_content):
+  for idx, (original_line, target_line) in enumerate(zip(original_content, target_content)):
     original_line = original_line.split()
     target_line = target_line.split()
 
