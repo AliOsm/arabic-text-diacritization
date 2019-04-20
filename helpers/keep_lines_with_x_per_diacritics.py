@@ -29,7 +29,7 @@ def getDiacPerc(line):
 # Load constatns
 ARABIC_LETTERS_LIST, CLASSES_LIST = load_constants()
 
-FOLDER_PATH = '/home/kudo/Desktop/repositories/shakkelha/comparisons/shakkala/auxiliary_dataset/dataset'
+FOLDER_PATH = '../testest/'
 
 files = [file for file in listdir(FOLDER_PATH) if isfile(join(FOLDER_PATH, file))]
 

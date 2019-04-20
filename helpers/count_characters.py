@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import sys
 import argparse
 import pickle as pkl
 
@@ -22,8 +21,8 @@ def count_characters(file_path, arabic_letters, diacritics):
   return arabic_letters_count, diacritics_count
 
 if __name__ == '__main__':
-  parser = argparse.ArgumentParser(description='Count Arabic letters and diacritics count')
-  parser.add_argument('-fp', '--file-path', help='File path to count from', required=True)
+  parser = argparse.ArgumentParser(description='Count Arabic letters and diacritics')
+  parser.add_argument('-in', '--file-path', help='File path to count from', required=True)
   args = parser.parse_args()
 
   with open(CONSTANTS_PATH + '/ARABIC_LETTERS_LIST.pickle', 'rb') as file:

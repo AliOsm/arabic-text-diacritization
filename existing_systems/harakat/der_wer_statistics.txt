@@ -1,9 +1,15 @@
-DER with case ending (no diacritics included): 18.47
-DER without case ending (no diacritics included): 17.09
-WER with case ending (no diacritics included): 52.05
-WER without case ending (no diacritics included): 41.89
++---------------------------------------------------------------------------------------------+
+|       |  With case ending  | Without case ending |  With case ending  | Without case ending |
+|  DER  |------------------------------------------+------------------------------------------|
+|       |          Including no diacritic          |          Excluding no diacritic          |
+|-------+------------------------------------------+------------------------------------------|
+|   %   |        18.37       |        17.03        |        20.64       |        18.55        |
++---------------------------------------------------------------------------------------------+
 
-DER with case ending (no diacritics not included): 20.9
-DER without case ending (no diacritics not included): 18.71
-WER with case ending (no diacritics not included): 48.31
-WER without case ending (no diacritics not included): 33.87
++---------------------------------------------------------------------------------------------+
+|       |  With case ending  | Without case ending |  With case ending  | Without case ending |
+|  WER  |------------------------------------------+------------------------------------------|
+|       |          Including no diacritic          |          Excluding no diacritic          |
+|-------+------------------------------------------+------------------------------------------|
+|   %   |        41.83       |        32.03        |        38.33       |        28.29        |
++---------------------------------------------------------------------------------------------+

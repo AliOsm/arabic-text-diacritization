@@ -43,7 +43,7 @@ def get_diacritic_class(idx, line, case_ending, arabic_letters, diacritic_classe
 def get_diacritics_classes(line, case_ending, arabic_letters, diacritic_classes, style):
   classes = list()
   for idx, char in enumerate(line):
-    if style == 'Ali':
+    if style == 'Fadel':
       if char in arabic_letters:
         classes.append(get_diacritic_class(idx, line, case_ending, arabic_letters, diacritic_classes))
     elif style == 'Zitouni':
@@ -51,6 +51,9 @@ def get_diacritics_classes(line, case_ending, arabic_letters, diacritic_classes,
         continue
       classes.append(get_diacritic_class(idx, line, case_ending, arabic_letters, diacritic_classes))
   return classes
+
+def clear_line(line, arabic_letters, diacritic_classes):
+  return ' '.join(''.join([char if char in list(arabic_letters) + diacritic_classes + [' '] else ' ' for char in line]).split())
 
 def calculate_der(original_file, target_file, arabic_letters, diacritic_classes, style, case_ending=True, no_diacritic=True):
   with open(original_file, 'r') as file:
@@ -64,6 +67,10 @@ def calculate_der(original_file, target_file, arabic_letters, diacritic_classes,
   equal = 0
   not_equal = 0
   for (original_line, target_line) in zip(original_content, target_content):
+    if style == 'Fadel':
+      original_line = clear_line(original_line, arabic_letters, diacritic_classes)
+      target_line = clear_line(target_line, arabic_letters, diacritic_classes)
+
     original_classes = get_diacritics_classes(original_line, case_ending, arabic_letters, diacritic_classes, style)
     target_classes = get_diacritics_classes(target_line, case_ending, arabic_letters, diacritic_classes, style)
 
@@ -96,6 +103,10 @@ def calculate_wer(original_file, target_file, arabic_letters, diacritic_classes,
   equal = 0
   not_equal = 0
   for idx, (original_line, target_line) in enumerate(zip(original_content, target_content)):
+    if style == 'Fadel':
+      original_line = clear_line(original_line, arabic_letters, diacritic_classes)
+      target_line = clear_line(target_line, arabic_letters, diacritic_classes)
+
     original_line = original_line.split()
     target_line = target_line.split()
 
@@ -126,7 +137,7 @@ if __name__ == '__main__':
   parser = argparse.ArgumentParser(description='Calculate DER and WER')
   parser.add_argument('-ofp', '--original-file-path', help='File path to original text', required=True)
   parser.add_argument('-tfp', '--target-file-path', help='File path to target text', required=True)
-  parser.add_argument('-s', '--style', help='How to calculate DER and WER', required=False, default='Ali', choices=['Zitouni', 'Ali'])
+  parser.add_argument('-s', '--style', help='How to calculate DER and WER', required=False, default='Fadel', choices=['Zitouni', 'Fadel'])
   args = parser.parse_args()
 
   with open(CONSTANTS_PATH + '/ARABIC_LETTERS_LIST.pickle', 'rb') as file:
