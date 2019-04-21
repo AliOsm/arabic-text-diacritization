@@ -22,7 +22,7 @@ def fix_fathatan(file_path):
   print(file_path)
 
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser(description='Changes after-Alif fathatan to before-Alit fathatan')
+  parser = argparse.ArgumentParser(description='Changes after-Alif fathatan to before-Alit fathatan')
   parser.add_argument('-in', '--file-path', help='File path to fix it', required=True)
   args = parser.parse_args()
 
