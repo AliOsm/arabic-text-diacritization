@@ -2,27 +2,26 @@
 
 import os
 import re
-import sys
+import argparse
 
-def fix_fathatan(FILE_PATH):
-  with open(FILE_PATH, 'r') as file:
+def fix_fathatan(file_path):
+  with open(file_path, 'r') as file:
     lines = file.readlines()
 
   new_lines = []
   for line in lines:
     new_lines.append(re.sub(r'اً', 'ًا', line))
 
-  FILE_PATH = FILE_PATH.split(os.sep)
-  FILE_PATH[-1] = 'fathatan_fixed_' + FILE_PATH[-1]
-  FILE_PATH = os.sep.join(FILE_PATH)
+  file_path = file_path.split(os.sep)
+  file_path[-1] = 'fixed_' + file_path[-1]
+  file_path = os.sep.join(file_path)
 
-  with open(FILE_PATH, 'w') as file:
+  with open(file_path, 'w') as file:
     file.write(''.join(new_lines))
 
 if __name__ == '__main__':
-  if len(sys.argv) != 2:
-    sys.exit('usage: python %s [FILE_PATH]' % sys.argv[0])
+	parser = argparse.ArgumentParser(description='Changes after-Alif fathatan to before-Alit fathatan')
+  parser.add_argument('-in', '--file-path', help='File path to fix it', required=True)
+  args = parser.parse_args()
 
-  FILE_PATH = sys.argv[1]
-
-  fix_fathatan(FILE_PATH)
+  fix_fathatan(args.file_path)

@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
+
 import os
-import sys
+import argparse
 import pickle as pkl
 
-def remove_diacritics(FILE_PATH):
+def remove_diacritics(file_path):
   def _remove_diacritics(content):
     return content.translate(str.maketrans('', '', ''.join(DIACRITICS_LIST)))
 
@@ -11,26 +13,25 @@ def remove_diacritics(FILE_PATH):
   with open(CONSTANTS_PATH + '/DIACRITICS_LIST.pickle', 'rb') as file:
     DIACRITICS_LIST = pkl.load(file)
 
-  with open(FILE_PATH, 'r') as file:
+  with open(file_path, 'r') as file:
     lines = file.readlines()
 
   new_lines = []
   for line in lines:
     new_lines.append(_remove_diacritics(line).strip())
 
-  FILE_PATH = FILE_PATH.split(os.sep)
-  FILE_PATH[-1] = 'cleaned_' + FILE_PATH[-1]
-  FILE_PATH = os.sep.join(FILE_PATH)
+  file_path = file_path.split(os.sep)
+  file_path[-1] = 'cleaned_' + file_path[-1]
+  file_path = os.sep.join(file_path)
 
-  print(FILE_PATH)
+  print(file_path)
 
-  with open(FILE_PATH, 'w') as file:
+  with open(file_path, 'w') as file:
     file.write('\n'.join(new_lines))
 
 if __name__ == '__main__':
-  if len(sys.argv) != 2:
-    sys.exit('usage: python %s [FILE_PATH]' % sys.argv[0])
+  parser = argparse.ArgumentParser(description='Removes diacritics from file')
+  parser.add_argument('-in', '--file-path', help='File path to remove diacritics from it', required=True)
+  args = parser.parse_args()
 
-  FILE_PATH = sys.argv[1]
-
-  remove_diacritics(FILE_PATH)
+  remove_diacritics(args.file_path)
