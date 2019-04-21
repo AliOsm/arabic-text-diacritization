@@ -19,6 +19,8 @@ def fix_fathatan(file_path):
   with open(file_path, 'w') as file:
     file.write(''.join(new_lines))
 
+  print(file_path)
+
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description='Changes after-Alif fathatan to before-Alit fathatan')
   parser.add_argument('-in', '--file-path', help='File path to fix it', required=True)

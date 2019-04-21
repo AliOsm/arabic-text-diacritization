@@ -26,11 +26,11 @@ def count_fathatan(folder_path):
   return before, after
 
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser(description='Count fathatan before and after Alif')
+  parser = argparse.ArgumentParser(description='Count fathatan before and after Alif')
   parser.add_argument('-in', '--folder-path', help='Folder path to count from all files inside it', required=True)
   args = parser.parse_args()
 
-  before, after = count_fathatan(args.file_path)
+  before, after = count_fathatan(args.folder_path)
   
   print('Before Alif:', before)
   print('After Alif:', after)

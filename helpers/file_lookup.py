@@ -16,7 +16,7 @@ def file_lookup(folder_path, line):
   return found_files
 
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser(description='Search for line into folder files')
+  parser = argparse.ArgumentParser(description='Search for line into folder files')
   parser.add_argument('-in', '--folder-path', help='Folder path to search in', required=True)
   parser.add_argument('-line', help='Line to search for', required=True)
   args = parser.parse_args()
