@@ -12,7 +12,7 @@ def get_diacritic_class(idx, line, case_ending, arabic_letters, diacritic_classe
     end = True
     for i in range(idx + 1, len(line)):
       if line[i] not in diacritic_classes:
-        end = line[i] not in arabic_letters
+        end = line[i].isspace()
         break
     if end:
       return -1
@@ -89,7 +89,7 @@ def calculate_der(original_file, target_file, arabic_letters, diacritic_classes,
       equal += (original_class == target_class)
       not_equal += (original_class != target_class)
 
-  return round(not_equal / (equal + not_equal) * 100, 2)
+  return round(not_equal / max(1, (equal + not_equal)) * 100, 2)
 
 def calculate_wer(original_file, target_file, arabic_letters, diacritic_classes, style, case_ending=True, no_diacritic=True):
   with open(original_file, 'r') as file:
@@ -131,7 +131,7 @@ def calculate_wer(original_file, target_file, arabic_letters, diacritic_classes,
       equal += (equal_classes == len(original_classes))
       not_equal += (equal_classes != len(original_classes))
 
-  return round(not_equal / (equal + not_equal) * 100, 2)
+  return round(not_equal / max(1, (equal + not_equal)) * 100, 2)
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser(description='Calculate DER and WER')
