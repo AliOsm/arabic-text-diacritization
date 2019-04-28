@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
+import argparse
 import sys
 import pickle as pkl
 
 from os import listdir
 from os.path import isfile, join
 
-CONSTANTS_PATH = '../Constants'
-each = dict()
-
+CONSTANTS_PATH = 'constants'
 
 def count_each_dic(FILE_PATH):
-  
+  each = dict()
+
   with open(CONSTANTS_PATH + '/CLASSES_LIST.pickle', 'rb') as file:
     CLASSES_LIST = pkl.load(file)
   
@@ -21,44 +21,48 @@ def count_each_dic(FILE_PATH):
   with open(CONSTANTS_PATH + '/DIACRITICS_LIST.pickle', 'rb') as file:
     DIACRITICS_LIST = pkl.load(file)
 
-  with open(FILE_PATH, 'r') as f:
-    lines = f.readlines()
-
-  previous_char = ''
+  with open(FILE_PATH, 'r') as file:
+    lines = file.readlines()
   for line in lines:
-    for index in range(len(line)):
-      if line[index] in ARABIC_LETTERS_LIST:
-        if index + 1 < len(line) and line[index + 1] in DIACRITICS_LIST:
-          if index + 2 < len(line) and line[index + 1: index + 3] in CLASSES_LIST :
-            try:
-              each[line[index + 1: index + 2]] += 1
-            except:
-              each[line[index + 1: index + 2]] = 1
-          elif (index + 2 < len(line) and line[index + 1: index + 3] not in CLASSES_LIST) or index + 2 >= len(line):
-            try:
-              each[line[index + 1]] += 1
-            except:
-              each[line[index + 1]] = 1
-        if (index + 1 < len(line) and line[index + 1] not in DIACRITICS_LIST) or index + 1 >= len(line) :
-          try:
-            each['no_diac'] += 1
-          except:
-            each['no_diac'] = 1
-
-
+    for idx, char in enumerate(line):
+      if char in DIACRITICS_LIST:
+          continue
+      char_diac = ''
+      if idx + 1 < len(line) and line[idx + 1] in DIACRITICS_LIST:
+          char_diac = line[idx + 1]
+          if idx + 2 < len(line) and line[idx + 2] in DIACRITICS_LIST and char_diac + line[idx + 2] in CLASSES_LIST:
+              char_diac += line[idx + 2]
+          elif idx + 2 < len(line) and line[idx + 2] in DIACRITICS_LIST and line[idx + 2] + char_diac in CLASSES_LIST:
+              char_diac = line[idx + 2] + char_diac
+      try:
+        each[char_diac] += 1
+      except:
+        each[char_diac] = 1
+          
+  return each
 
 if __name__ == '__main__':
-  if len(sys.argv) != 2:
-  	sys.exit('usage: python %s [FILE_PATH]' % sys.argv[0])
+  parser = argparse.ArgumentParser(description='Count each diacritic frequency')
+  parser.add_argument('-in', '--file-path', help='File path to count from', required=True)
+  args = parser.parse_args()
 
-  FILE_PATH = sys.argv[1]
+  each = count_each_dic(args.file_path)
 
-  count_each_dic(FILE_PATH)
-
+  name = {'' : 'No Diacritic       ',
+          'َ' : 'Fatha              ',
+          'ً' : 'Fathatah           ',
+          'ُ' : 'Damma              ',
+          'ٌ' : 'Dammatan           ',
+          'ِ' : 'Kasra              ',
+          'ٍ' : 'Kasratan           ',
+          'ْ' : 'Sukun              ',
+          'ّ' : 'Shaddah            ',
+          'َّ' : 'Shaddah + Fatha    ',
+          'ًّ' : 'Shaddah + Fathatah ',
+          'ُّ' : 'Shaddah + Damma    ',
+          'ٌّ' : 'Shaddah + Dammatan ',
+          'ِّ' : 'Shaddah + Kasra    ',
+          'ٍّ' : 'Shaddah + Kasratan '}
+  print(each)
   for key in each:
-    print(key + ':', each[key])
-
-
-
-
-
+    print(name[key] + ':', each[key])
