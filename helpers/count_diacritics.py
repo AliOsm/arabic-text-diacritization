@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import argparse
-import sys
 import pickle as pkl
-
-from os import listdir
-from os.path import isfile, join
 
 CONSTANTS_PATH = 'constants'
 
