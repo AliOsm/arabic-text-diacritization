@@ -36,6 +36,8 @@ This repository contains the dataset, helpers, and systems comparison for our pa
 - shakkala - Contains [Shakkala](https://ahmadai.com/shakkala) system data splitting script, output, fixed output, and DER/WER statistics
 - tashkeela_model - Contains [Tashkeela-Model](https://github.com/Anwarvic/Tashkeela-Model) system output, fixed output, and DER/WER statistics for each n-gram model provided by them
 
+#### Note: All codes in this repository tested on [Ubuntu 18.04](http://releases.ubuntu.com/18.04)
+
 ## Contributors
 1. [Ali Hamdi Ali Fadel](https://github.com/AliOsm).<br/>
 2. [Ibraheem Tuffaha](https://github.com/IbraheemTuffaha).<br/>
