@@ -1,4 +1,4 @@
-# arabic-text-diacritization
+# Arabic Text Diacritization
 
 This repository contains the dataset, helpers, and systems comparison for our paper on Arabic Text Diacritization:
 
