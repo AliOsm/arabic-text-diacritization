@@ -2,7 +2,7 @@
 
 This repository contains the dataset, helpers, and systems comparison for our paper on Arabic Text Diacritization:
 
-"Arabic Text Diacritization Using Deep Neural Networks", Ali Fadel, Ibraheem Tuffaha, Bara' Al-Jawarneh, and Mahmoud Al-Ayyoub, [ICCAIS 2019](http://www.iccais.tech).
+"[Arabic Text Diacritization Using Deep Neural Networks](https://arxiv.org/abs/1905.01965)", Ali Fadel, Ibraheem Tuffaha, Bara' Al-Jawarneh, and Mahmoud Al-Ayyoub, [ICCAIS 2019](http://www.iccais.tech).
 
 ## Files
 
