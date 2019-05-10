@@ -1,8 +1,8 @@
-# arabic-text-diacritization
+# Arabic Text Diacritization
 
 This repository contains the dataset, helpers, and systems comparison for our paper on Arabic Text Diacritization:
 
-"Arabic Text Diacritization Using Deep Neural Networks", Ali Fadel, Ibraheem Tuffaha, Bara' Al-Jawarneh, and Mahmoud Al-Ayyoub, ICCAIS 2019.
+"[Arabic Text Diacritization Using Deep Neural Networks](https://arxiv.org/abs/1905.01965)", Ali Fadel, Ibraheem Tuffaha, Bara' Al-Jawarneh, and Mahmoud Al-Ayyoub, [ICCAIS 2019](http://www.iccais.tech).
 
 ## Files
 
@@ -35,6 +35,14 @@ This repository contains the dataset, helpers, and systems comparison for our pa
 - mishkal - Contains [Mishkal](https://tahadz.com/mishkal) system output, fixed output, and DER/WER statistics
 - shakkala - Contains [Shakkala](https://ahmadai.com/shakkala) system data splitting script, output, fixed output, and DER/WER statistics
 - tashkeela_model - Contains [Tashkeela-Model](https://github.com/Anwarvic/Tashkeela-Model) system output, fixed output, and DER/WER statistics for each n-gram model provided by them
+
+#### Note: All codes in this repository tested on [Ubuntu 18.04](http://releases.ubuntu.com/18.04)
+
+## Contributors
+1. [Ali Hamdi Ali Fadel](https://github.com/AliOsm).<br/>
+2. [Ibraheem Tuffaha](https://github.com/IbraheemTuffaha).<br/>
+3. [Bara' Al-Jawarneh](https://github.com/baraajaw).<br/>
+4. [Mahmoud Al-Ayyoub](https://github.com/malayyoub).<br/>
 
 ## License
 The project is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
