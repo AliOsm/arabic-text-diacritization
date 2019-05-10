@@ -53,7 +53,17 @@ def get_diacritics_classes(line, case_ending, arabic_letters, diacritic_classes,
   return classes
 
 def clear_line(line, arabic_letters, diacritic_classes):
-  return ' '.join(''.join([char if char in list(arabic_letters) + diacritic_classes + [' '] else ' ' for char in line]).split())
+  line = ' '.join(''.join([char if char in list(arabic_letters) + diacritic_classes + [' '] else ' ' for char in line]).split())
+  new_line = ''
+  for idx, char in enumerate(line):
+  	if char not in diacritic_classes or (idx > 0 and line[idx - 1] != ' '):
+  		new_line += char
+  line = new_line
+  new_line = ''
+  for idx, char in enumerate(line):
+  	if char not in diacritic_classes or (idx > 0 and line[idx - 1] != ' '):
+  		new_line += char
+  return new_line
 
 def calculate_der(original_file, target_file, arabic_letters, diacritic_classes, style, case_ending=True, no_diacritic=True):
   with open(original_file, 'r') as file:
