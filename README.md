@@ -19,7 +19,7 @@ This repository contains the dataset, helpers, and systems comparison for our pa
   - DIACRITICS_LIST.pickle - Contains list of all diacritics
 - count_characters.py - Counts the number of Arabic letters and diacritics in a file
 - count_fathatan.py - Counts the number of fathatan occurrences before and after Alif in all files from a folder
-- der_wer_calculator.py - Calculates DER and WER using the gold data and the predicted output
+- diacritization_stat.py - Calculates DER and WER using the gold data and the predicted output
 - diacritics_rate_extractor.py - Keeps lines with p% diacritics to Arabic characters rate or more in all files from a folder
 - file_lookup.py - Searches for a line in all files from a folder
 - fix_fathatan.py - Changes after-Alif fathatan to before-Alit fathatan in a file
