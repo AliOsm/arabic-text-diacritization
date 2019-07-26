@@ -60,5 +60,5 @@ if __name__ == '__main__':
           'ِّ' : 'Shaddah + Kasra    ',
           'ٍّ' : 'Shaddah + Kasratan '}
 
-  for key in each:
+  for key in name:
     print(name[key] + ':', each[key])
