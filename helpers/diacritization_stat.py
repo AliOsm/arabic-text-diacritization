@@ -50,6 +50,10 @@ def get_diacritics_classes(line, case_ending, arabic_letters, diacritic_classes,
       if char in diacritic_classes or char.isspace():
         continue
       classes.append(get_diacritic_class(idx, line, case_ending, arabic_letters, diacritic_classes))
+    elif style == 'Abandah':
+      if char in diacritic_classes:
+        continue
+      classes.append(get_diacritic_class(idx, line, case_ending, arabic_letters, diacritic_classes))
   return classes
 
 def clear_line(line, arabic_letters, diacritic_classes):
@@ -193,7 +197,7 @@ if __name__ == '__main__':
   parser = argparse.ArgumentParser(description='Calculate DER and WER')
   parser.add_argument('-ofp', '--original-file-path', help='File path to original text', required=True)
   parser.add_argument('-tfp', '--target-file-path', help='File path to target text', required=True)
-  parser.add_argument('-s', '--style', help='How to calculate DER and WER', required=False, default='Fadel', choices=['Zitouni', 'Fadel'])
+  parser.add_argument('-s', '--style', help='How to calculate DER and WER', required=False, default='Fadel', choices=['Zitouni', 'Fadel', 'Abandah'])
   args = parser.parse_args()
 
   with open(CONSTANTS_PATH + '/ARABIC_LETTERS_LIST.pickle', 'rb') as file:
